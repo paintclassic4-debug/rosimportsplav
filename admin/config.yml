@@ -1,0 +1,25 @@
+backend:
+  name: git-gateway
+  branch: main
+
+locale: 'ru'
+
+media_folder: "images"
+public_folder: "/images"
+
+collections:
+  - name: "settings"
+    label: "Настройки сайта"
+    files:
+      - name: "contacts"
+        label: "Контакты и реквизиты"
+        file: "_data/contacts.json"
+        fields:
+          - {label: "Телефон", name: "phone", widget: "string"}
+          - {label: "Email", name: "email", widget: "string"}
+          - {label: "Адрес", name: "address", widget: "string"}
+          - {label: "ИНН", name: "inn", widget: "string"}
+          - {label: "КПП", name: "kpp", widget: "string"}
+          - {label: "ОГРН", name: "ogrn", widget: "string"}
+          - {label: "Расчётный счёт", name: "bank_account", widget: "string"}
+          - {label: "ID Яндекс.Метрики", name: "metrika_id", widget: "string"}
