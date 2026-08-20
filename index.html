@@ -672,7 +672,8 @@ footer{background:var(--steel1);border-top:1px solid var(--line);padding:52px 0 
         <p>Пн–Пт: 9:00 – 18:00</p>
       </div>
     </div>
-    <div class="fbot">
+    <div style="padding:14px 0;border-bottom:1px solid var(--line2);margin-bottom:0;text-align:right"><a href="/admin" style="font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);transition:color .2s;padding:4px 0;border-bottom:1px solid transparent;" onmouseover="this.style.color='var(--acc2)';this.style.borderColor='var(--acc)'" onmouseout="this.style.color='var(--mut)';this.style.borderColor='transparent'">Панель управления</a></div>
+<div class="fbot">
       <div class="c">© 2026 ООО «РосИмпортСплав». Все права защищены.</div>
       <div class="c" style="cursor:pointer" data-nav="policy">Политика конфиденциальности</div>
     </div>
@@ -853,7 +854,7 @@ function renderCatalog(data){
     data.groups.forEach(function(g,gi){
       var icon=iconsSVG[g.id]||iconsSVG[1];
       html+='<div class="catgroup rv"><div class="gh"><div class="gi">'+icon+'</div><h3>'+g.name+'</h3><span class="num" style="margin-left:auto;font-family:\'Oswald\',sans-serif;font-size:12px;letter-spacing:.1em;color:var(--mut)">0'+(gi+1)+'</span></div><div class="items">';
-      g.items.forEach(function(item,ii){
+      var safeItems=g.items||[];safeItems.forEach(function(item,ii){
         var iicon=itemIcons[ii%itemIcons.length];
         html+='<div class="item"><div class="ic">'+iicon+'</div><div class="nm">'+item.name+'</div></div>';
       });
@@ -870,7 +871,7 @@ function renderCatalog(data){
 }
 
 function loadCatalog(){
-  fetch('/_data/catalog.json')
+  fetch('https://raw.githubusercontent.com/paintclassic4-debug/rosimportsplav/main/_data/catalog.json')
     .then(function(r){return r.json();})
     .then(function(data){renderCatalog(data);})
     .catch(function(){console.log('Каталог загружается статически');});
