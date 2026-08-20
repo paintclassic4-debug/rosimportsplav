@@ -9,18 +9,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-<script>
-if(window.netlifyIdentity){
-  window.netlifyIdentity.on('init',function(user){
-    if(!user){
-      window.netlifyIdentity.on('login',function(){
-        document.location.href='/admin/';
-      });
-    }
-  });
-}
-</script>
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
@@ -304,6 +292,58 @@ footer{background:var(--steel1);border-top:1px solid var(--line);padding:52px 0 
   *{animation:none!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
   .rv{opacity:1!important;transform:none!important}
 }
+
+/* ===== МИНИ-АДМИНКА ===== */
+#adminBtn{position:fixed;bottom:24px;right:24px;z-index:8000;width:46px;height:46px;background:var(--steel2);border:1px solid var(--line);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .3s;color:var(--mut)}
+#adminBtn:hover{border-color:var(--acc);color:var(--acc2);transform:rotate(30deg)}
+#adminBtn svg{width:20px;height:20px}
+#adminOv{position:fixed;inset:0;z-index:8500;background:rgba(6,7,9,.85);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s}
+#adminOv.on{opacity:1;visibility:visible}
+#adminPanel{background:var(--steel2);border:1px solid var(--line);border-radius:14px;width:100%;max-width:560px;max-height:85vh;display:flex;flex-direction:column;overflow:hidden;transform:translateY(16px);transition:transform .35s cubic-bezier(.2,.9,.3,1)}
+#adminOv.on #adminPanel{transform:none}
+.ap-head{padding:22px 26px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;flex:0 0 auto}
+.ap-head h3{font-family:'Oswald',sans-serif;font-size:20px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;display:flex;align-items:center;gap:10px}
+.ap-head h3 svg{width:20px;height:20px;color:var(--acc)}
+.ap-close{width:32px;height:32px;border:1px solid var(--line);background:none;color:var(--silver);cursor:pointer;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:16px;transition:all .25s}
+.ap-close:hover{border-color:var(--acc);color:var(--acc2)}
+.ap-tabs{display:flex;gap:0;border-bottom:1px solid var(--line);flex:0 0 auto}
+.ap-tab{flex:1;padding:12px;text-align:center;font-family:'Oswald',sans-serif;font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);cursor:pointer;border-bottom:2px solid transparent;transition:all .25s}
+.ap-tab.on{color:var(--acc2);border-color:var(--acc)}
+.ap-body{flex:1;overflow-y:auto;padding:20px 26px}
+.ap-body::-webkit-scrollbar{width:4px}
+.ap-body::-webkit-scrollbar-track{background:transparent}
+.ap-body::-webkit-scrollbar-thumb{background:var(--line);border-radius:2px}
+.ap-login{display:flex;flex-direction:column;gap:14px;max-width:320px;margin:20px auto}
+.ap-login h4{font-family:'Oswald',sans-serif;font-size:18px;text-transform:uppercase;color:var(--silver);text-align:center}
+.ap-login input{background:var(--steel1);border:1px solid var(--line);border-radius:7px;color:var(--silver);font-family:'Inter',sans-serif;font-size:14px;padding:12px 15px;outline:none;transition:border-color .3s}
+.ap-login input:focus{border-color:var(--acc)}
+.ap-login input::placeholder{color:var(--mut)}
+.ap-err{color:#e55;font-size:13px;text-align:center}
+.ap-group{margin-bottom:20px;border:1px solid var(--line2);border-radius:9px;overflow:hidden}
+.ap-group-head{background:var(--card);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;cursor:pointer}
+.ap-group-head h4{font-family:'Oswald',sans-serif;font-size:15px;font-weight:500;text-transform:uppercase;letter-spacing:.04em;flex:1}
+.ap-group-head .cnt{font-size:11px;color:var(--mut);white-space:nowrap}
+.ap-group-head .arr{font-size:12px;color:var(--mut);transition:transform .25s}
+.ap-group-head.open .arr{transform:rotate(180deg)}
+.ap-items{display:none;padding:6px 0}
+.ap-items.on{display:block}
+.ap-item{display:flex;align-items:center;gap:10px;padding:9px 16px;border-bottom:1px solid var(--line2)}
+.ap-item:last-child{border-bottom:none}
+.ap-item span{flex:1;font-size:13.5px;color:var(--silverD)}
+.ap-del{width:28px;height:28px;background:none;border:1px solid rgba(220,80,80,.3);border-radius:5px;color:rgba(220,80,80,.6);cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;transition:all .25s;flex:0 0 auto}
+.ap-del:hover{border-color:#e55;color:#e55;background:rgba(220,80,80,.1)}
+.ap-add-row{display:flex;gap:8px;padding:10px 16px;background:rgba(127,160,188,.04)}
+.ap-add-row input{flex:1;background:var(--steel1);border:1px solid var(--line);border-radius:6px;color:var(--silver);font-family:'Inter',sans-serif;font-size:13px;padding:8px 12px;outline:none;transition:border-color .3s}
+.ap-add-row input:focus{border-color:var(--acc)}
+.ap-add-row input::placeholder{color:var(--mut)}
+.ap-add-btn{padding:8px 14px;background:var(--acc);color:var(--noir);border:none;border-radius:6px;font-family:'Oswald',sans-serif;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:all .25s;white-space:nowrap}
+.ap-add-btn:hover{background:var(--acc2)}
+.ap-add-group{display:flex;gap:8px;margin-top:16px}
+.ap-save{width:100%;padding:14px;background:var(--acc);color:var(--noir);border:none;border-radius:8px;font-family:'Oswald',sans-serif;font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:all .3s;margin-top:16px}
+.ap-save:hover{background:var(--acc2)}
+.ap-save:disabled{opacity:.5;cursor:not-allowed}
+.ap-msg{text-align:center;font-size:13px;margin-top:8px;min-height:20px;color:var(--acc2)}
+
 </style>
 </head>
 <body>
@@ -672,8 +712,7 @@ footer{background:var(--steel1);border-top:1px solid var(--line);padding:52px 0 
         <p>Пн–Пт: 9:00 – 18:00</p>
       </div>
     </div>
-    <div style="padding:14px 0;border-bottom:1px solid var(--line2);margin-bottom:0;text-align:right"><a href="/admin" style="font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);transition:color .2s;padding:4px 0;border-bottom:1px solid transparent;" onmouseover="this.style.color='var(--acc2)';this.style.borderColor='var(--acc)'" onmouseout="this.style.color='var(--mut)';this.style.borderColor='transparent'">Панель управления</a></div>
-<div class="fbot">
+    <div class="fbot">
       <div class="c">© 2026 ООО «РосИмпортСплав». Все права защищены.</div>
       <div class="c" style="cursor:pointer" data-nav="policy">Политика конфиденциальности</div>
     </div>
@@ -878,7 +917,176 @@ function loadCatalog(){
 }
 
   loadCatalog();
+
+// ===== МИНИ-АДМИНКА =====
+var ADMIN_PASS='ris2026admin';
+var GH_TOKEN=localStorage.getItem('ris_gh_token')||'';
+var GH_OWNER='paintclassic4-debug';
+var GH_REPO='rosimportsplav';
+var apLogged=false;
+var apCatalog=null;
+
+function adminToggle(){document.getElementById('adminOv').classList.toggle('on');}
+function adminClose(){document.getElementById('adminOv').classList.remove('on');}
+document.getElementById('adminOv').addEventListener('click',function(e){if(e.target===this)adminClose();});
+
+function apLogin(){
+  var p=document.getElementById('apPass').value;
+  if(p===ADMIN_PASS){
+    apLogged=true;
+    // Токен хранится в localStorage (устанавливается отдельно)
+    if(!GH_TOKEN){
+      var t=prompt('Введите GitHub токен (один раз):');
+      if(t){GH_TOKEN=t;localStorage.setItem('ris_gh_token',t);}
+    }
+    document.getElementById('apLoginBox').style.display='none';
+    var mb=document.getElementById('apMainBox');mb.style.display='flex';
+    apLoadCatalog();
+  } else {
+    document.getElementById('apErr').textContent='Неверный пароль';
+  }
+}
+
+function apTab(n){
+  document.querySelectorAll('.ap-tab').forEach(function(t,i){t.classList.toggle('on',i===n);});
+  document.getElementById('apCatalogTab').style.display=n===0?'block':'none';
+  document.getElementById('apOrdersTab').style.display=n===1?'block':'none';
+}
+
+function apLoadCatalog(){
+  fetch('https://raw.githubusercontent.com/'+GH_OWNER+'/'+GH_REPO+'/main/_data/catalog.json?t='+Date.now())
+    .then(function(r){return r.json();})
+    .then(function(data){apCatalog=data;apRenderCatalog();})
+    .catch(function(){document.getElementById('apCatalogList').innerHTML='<p style="color:var(--mut)">Ошибка загрузки каталога</p>';});
+}
+
+function apRenderCatalog(){
+  if(!apCatalog)return;
+  var html='';
+  apCatalog.groups.forEach(function(g,gi){
+    var items=g.items||[];
+    html+='<div class="ap-group"><div class="ap-group-head" onclick="apToggleGroup(this)"><h4>'+g.name+'</h4><span class="cnt">'+items.length+' поз.</span><span class="arr">▼</span></div>';
+    html+='<div class="ap-items"><div>';
+    items.forEach(function(item,ii){
+      html+='<div class="ap-item"><span>'+item.name+'</span><button class="ap-del" onclick="apDelItem('+gi+','+ii+')" title="Удалить">✕</button></div>';
+    });
+    html+='</div><div class="ap-add-row"><input type="text" placeholder="Новая позиция..." id="apNewItem'+gi+'"><button class="ap-add-btn" onclick="apAddItem('+gi+')">+ Добавить</button></div></div></div>';
+  });
+  document.getElementById('apCatalogList').innerHTML=html;
+}
+
+function apToggleGroup(el){
+  el.classList.toggle('open');
+  var items=el.nextElementSibling;
+  items.classList.toggle('on');
+}
+
+function apDelItem(gi,ii){
+  if(!confirm('Удалить позицию?'))return;
+  apCatalog.groups[gi].items.splice(ii,1);
+  apRenderCatalog();
+}
+
+function apAddItem(gi){
+  var inp=document.getElementById('apNewItem'+gi);
+  var name=inp.value.trim();
+  if(!name)return;
+  if(!apCatalog.groups[gi].items)apCatalog.groups[gi].items=[];
+  apCatalog.groups[gi].items.push({id:Date.now(),name:name});
+  inp.value='';
+  apRenderCatalog();
+  // Переоткрываем группу
+  setTimeout(function(){
+    var heads=document.querySelectorAll('.ap-group-head');
+    if(heads[gi]&&!heads[gi].classList.contains('open')){heads[gi].click();}
+  },50);
+}
+
+function apAddGroup(){
+  var inp=document.getElementById('apNewGroup');
+  var name=inp.value.trim();
+  if(!name)return;
+  var newId=apCatalog.groups.length+1;
+  apCatalog.groups.push({id:newId,name:name,items:[]});
+  inp.value='';
+  apRenderCatalog();
+}
+
+function apSave(){
+  var btn=document.getElementById('apSaveBtn');
+  var msg=document.getElementById('apMsg');
+  btn.disabled=true;btn.textContent='Сохранение...';msg.textContent='';
+  
+  // Получаем SHA файла
+  fetch('https://api.github.com/repos/'+GH_OWNER+'/'+GH_REPO+'/contents/_data/catalog.json',{
+    headers:{'Authorization':'token '+GH_TOKEN,'Accept':'application/vnd.github.v3+json'}
+  })
+  .then(function(r){return r.json();})
+  .then(function(d){
+    var content=btoa(unescape(encodeURIComponent(JSON.stringify(apCatalog,null,2))));
+    return fetch('https://api.github.com/repos/'+GH_OWNER+'/'+GH_REPO+'/contents/_data/catalog.json',{
+      method:'PUT',
+      headers:{'Authorization':'token '+GH_TOKEN,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'},
+      body:JSON.stringify({message:'Update catalog via admin panel',content:content,sha:d.sha,branch:'main'})
+    });
+  })
+  .then(function(r){return r.json();})
+  .then(function(){
+    msg.style.color='var(--acc2)';
+    msg.textContent='✅ Сохранено! Сайт обновится через ~30 сек.';
+    btn.disabled=false;btn.textContent='💾 Сохранить изменения';
+    // Обновляем каталог на сайте
+    setTimeout(function(){loadCatalog();},3000);
+  })
+  .catch(function(e){
+    msg.style.color='#e55';
+    msg.textContent='❌ Ошибка сохранения. Попробуйте ещё раз.';
+    btn.disabled=false;btn.textContent='💾 Сохранить изменения';
+  });
+}
+
 })();
 </script>
+
+<!-- ===== МИНИ-АДМИНКА ===== -->
+<div id="adminBtn" onclick="adminToggle()" title="Панель управления">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+</div>
+
+<div id="adminOv">
+  <div id="adminPanel">
+    <div class="ap-head">
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Панель управления</h3>
+      <button class="ap-close" onclick="adminClose()">×</button>
+    </div>
+    <div id="apLoginBox" class="ap-body">
+      <div class="ap-login">
+        <h4>Вход</h4>
+        <input type="password" id="apPass" placeholder="Пароль администратора" onkeydown="if(event.key==='Enter')apLogin()">
+        <button class="btn btn-m" onclick="apLogin()">Войти</button>
+        <div class="ap-err" id="apErr"></div>
+      </div>
+    </div>
+    <div id="apMainBox" style="display:none;flex-direction:column;flex:1;overflow:hidden">
+      <div class="ap-tabs">
+        <div class="ap-tab on" onclick="apTab(0)">📦 Каталог</div>
+        <div class="ap-tab" onclick="apTab(1)">📋 Заявки</div>
+      </div>
+      <div class="ap-body" id="apCatalogTab">
+        <div id="apCatalogList"></div>
+        <div class="ap-add-group">
+          <input type="text" id="apNewGroup" placeholder="Название новой группы..." style="flex:1;background:var(--steel1);border:1px solid var(--line);border-radius:6px;color:var(--silver);font-family:'Inter',sans-serif;font-size:13px;padding:9px 13px;outline:none">
+          <button class="ap-add-btn" onclick="apAddGroup()">+ Группа</button>
+        </div>
+        <button class="ap-save" id="apSaveBtn" onclick="apSave()">💾 Сохранить изменения</button>
+        <div class="ap-msg" id="apMsg"></div>
+      </div>
+      <div class="ap-body" id="apOrdersTab" style="display:none">
+        <p style="color:var(--silverD);font-size:14px;line-height:1.7">Заявки приходят на почту через Formspree.<br>Для просмотра войдите на <a href="https://formspree.io" target="_blank" style="color:var(--acc2)">formspree.io</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
